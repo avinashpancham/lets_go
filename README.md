@@ -2,4 +2,5 @@
 
 Learning Golang by making small apps. 
 
-- Mathquiz: small CLI app designed by [Gophercises](https://gophercises.com/)
+- math_quiz: small CLI app designed by [Gophercises](https://gophercises.com/)
+- url_shortener: small webapp that shortens url and redirects shortened urls
