@@ -28,7 +28,7 @@ func shortenHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func redirectHandler(w http.ResponseWriter, r *http.Request) {
-	hashValue := r.URL.Path[len("/redirect/"):]
+	hashValue := r.URL.Path[len("/"):]
 
 	// Retrieve url corresponding to url from bolt db and redirect
 	redirectURL := utils.ReadRecord(db, bucketName, hashValue)
@@ -39,7 +39,7 @@ func main() {
 	defer db.Close()
 
 	http.HandleFunc("/shortener/", shortenHandler)
-	http.HandleFunc("/redirect/", redirectHandler)
+	http.HandleFunc("/", redirectHandler)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 
 }
