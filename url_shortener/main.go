@@ -2,7 +2,6 @@ package main
 
 import (
 	"crypto/sha1"
-	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -24,9 +23,16 @@ func shortenHandler(w http.ResponseWriter, r *http.Request) {
 	trimmedHashValue := strings.ReplaceAll(hashValue, " ", "")[:5]
 
 	// Store and return response
-	mappedReturn, _ := json.Marshal(map[string]string{vars["page"]: trimmedHashValue})
-	w.Write([]byte(string(mappedReturn)))
 	utils.WriteRecord(db, bucketName, trimmedHashValue, vars["page"])
+	tmpl := template.Must(template.ParseFiles("static/shorten.html"))
+	data := struct {
+		URL  string
+		Hash string
+	}{
+		URL:  vars["page"],
+		Hash: r.Referer() + trimmedHashValue,
+	}
+	tmpl.Execute(w, data)
 }
 
 func redirectHandler(w http.ResponseWriter, r *http.Request) {
@@ -37,16 +43,8 @@ func redirectHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, redirectURL, 302)
 }
 
-type TodoPageData struct {
-	PageTitle string
-}
-
 func mainHandler(w http.ResponseWriter, r *http.Request) {
-	tmpl := template.Must(template.ParseFiles("layout.html"))
-	data := TodoPageData{
-		PageTitle: "URL shortener",
-	}
-	tmpl.Execute(w, data)
+	http.ServeFile(w, r, "static/main.html")
 }
 
 func main() {

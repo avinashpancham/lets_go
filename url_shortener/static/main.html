@@ -1,0 +1,28 @@
+<html>
+
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+    <h1>URL shortener</h1>
+    <div class="search-container">
+        <input type="text" id="searchbox" placeholder="Shorten url..">
+        <button type="submit" id="button">Submit</button>
+    </div>
+</body>
+
+</html>
+
+<script type="text/javascript">
+    document.getElementById("button").onclick = function() {
+        location.href = "/shortener/" + document.getElementById("searchbox").value;
+    };
+</script>
+
+<style>
+    * {
+        font-family: 'Roboto', sans-serif;
+    }
+</style>
