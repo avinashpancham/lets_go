@@ -1,4 +1,4 @@
-package dbUtils
+package utils
 
 import (
 	"fmt"
