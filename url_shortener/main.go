@@ -16,8 +16,8 @@ func main() {
 	r := mux.NewRouter()
 
 	// Define folder for static files
-	s := http.StripPrefix("/static/", http.FileServer(http.Dir("./static/")))
-	r.PathPrefix("/static/").Handler(s)
+	s := "/static/"
+	r.PathPrefix(s).Handler(http.StripPrefix(s, http.FileServer(http.Dir("."+s))))
 
 	// Define endpoints
 	r.HandleFunc("/shortener/{page}", utils.ShortenHandler(db, bucketName))
