@@ -24,7 +24,7 @@ func shortenHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Store and return response
 	utils.WriteRecord(db, bucketName, trimmedHashValue, vars["page"])
-	tmpl := template.Must(template.ParseFiles("static/shorten.html"))
+	tmpl := template.Must(template.ParseFiles("html/shorten.html"))
 	data := struct {
 		URL  string
 		Hash string
@@ -44,12 +44,14 @@ func redirectHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func mainHandler(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "static/main.html")
+	http.ServeFile(w, r, "html/main.html")
 }
 
 func main() {
 	defer db.Close()
 	r := mux.NewRouter()
+	s := http.StripPrefix("/static/", http.FileServer(http.Dir("./static/")))
+	r.PathPrefix("/static/").Handler(s)
 	r.HandleFunc("/shortener/{page}", shortenHandler)
 	r.HandleFunc("/{hash:[a-z0-9]{5}}", redirectHandler)
 	r.HandleFunc("/", mainHandler)
