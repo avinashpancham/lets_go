@@ -37,7 +37,10 @@ func ShortenHandler(db *bolt.DB, bucketName string) http.HandlerFunc {
 			URL:  vars["page"],
 			Hash: r.Referer() + trimmedHashValue,
 		}
-		tmpl.Execute(w, data)
+		err := tmpl.Execute(w, data)
+		if err != nil {
+			fmt.Println("Error in shorten template")
+		}
 	}
 
 	return http.HandlerFunc(fn)
