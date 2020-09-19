@@ -4,8 +4,8 @@ import (
 	"log"
 	"net/http"
 
-	db_utils "./utils/db"
-	view_utils "./utils/views"
+	db_utils "lets_go/url_shortener/utils/db"
+	view_utils "lets_go/url_shortener/utils/views"
 
 	"github.com/gorilla/mux"
 )

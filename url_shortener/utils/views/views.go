@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strings"
 
-	db_utils "../db"
+	db_utils "lets_go/url_shortener/utils/db"
 
 	"github.com/gorilla/mux"
 	bolt "go.etcd.io/bbolt"
