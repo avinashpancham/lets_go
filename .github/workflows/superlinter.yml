@@ -42,10 +42,10 @@ jobs:
         uses: actions/checkout@v2
       - name: Build GO app
         run: |
-          pwd
-          ls -la
-          cd url_shortener
-          go build .
+          echo $(pwd)
+          echo $(ls -la)
+          # cd url_shortener
+          # go build .
       - name: Set up JFrog
         uses: jfrog/setup-jfrog-cli@v1
         env:
