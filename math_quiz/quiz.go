@@ -28,6 +28,9 @@ func main() {
 
 	// Parse all the questions and answers
 	lines, err := csvReader.ReadAll()
+	if err != nil {
+		fmt.Printf("Failed to read file due to: %s\n", err)
+	}
 	parsedLines := parseLines(lines)
 
 	score := 0
@@ -65,7 +68,10 @@ func parseLines(lines [][]string) []problem {
 }
 
 func askQuestion(ch chan string, reader *bufio.Reader) {
-	userAnswer, _ := reader.ReadString('\n')
+	userAnswer, err := reader.ReadString('\n')
+	if err != nil {
+		fmt.Printf("Failed to read file due to: %s\n", err)
+	}
 	ch <- userAnswer
 
 }
