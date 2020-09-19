@@ -41,11 +41,11 @@ jobs:
         run: |
           cd url_shortener
           go build .
+          ls -la
       - name: Set up JFrog
         uses: jfrog/setup-jfrog-cli@v1
         env:
           JF_ARTIFACTORY_1: ${{ secrets.JF_ARTIFACTORY_SECRET_1 }}
       - name: Ping to artifactory
-        run: |
-          # Ping the server
-          jfrog rt ping
+        run: jfrog rt u "url_shortener_jfrog" go --build-name=test --build-number="1" --flat=false
+          
