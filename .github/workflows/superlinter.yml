@@ -38,8 +38,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: super-lint
     steps:
+    - name: Checkout code
+        uses: actions/checkout@v2
       - name: Build GO app
         run: |
+          pwd
           ls -la
           cd url_shortener
           go build .
