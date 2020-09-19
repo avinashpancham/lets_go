@@ -34,9 +34,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: '1.14.7' # The Go version to download (if necessary) and use.
       - name: Build GO app
         run: |
-          ls -la 
+          cd url_shortener
+          go build .
       - name: Set up JFrog
         uses: jfrog/setup-jfrog-cli@v1
         env:
