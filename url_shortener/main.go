@@ -26,6 +26,6 @@ func main() {
 	r.HandleFunc("/{hash:[a-z0-9]{5}}", view_utils.RedirectHandler(db, bucketName))
 	r.HandleFunc("/", view_utils.MainHandler)
 
-	log.Fatal(http.ListenAndServe(":8080", r))
+	log.Panic(http.ListenAndServe(":8080", r))
 
 }
