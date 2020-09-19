@@ -46,5 +46,7 @@ jobs:
         env:
           JF_ARTIFACTORY_1: ${{ secrets.JF_ARTIFACTORY_SECRET_1 }}
       - name: Push to artifactory
-        run: jfrog rt u "url_shortener" go --build-name=test --build-number="1" --flat=false
+        run: |
+        ls -la
+        jfrog rt u "url_shortener" go --build-name=test --build-number="1" --flat=false
           
