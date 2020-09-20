@@ -41,4 +41,4 @@ jobs:
           DATE: "${{ steps.current-time.outputs.formattedTime }}"
         run: |
           cd url_shortener
-          jfrog rt u "url_shortener" go --build-name=$DATE_url_shortener --build-number=$GITHUB_RUN_NUMBER --flat=false
+          jfrog rt u "url_shortener" go --build-name="${DATE}_url_shortener" --build-number=$GITHUB_RUN_NUMBER --flat=false
