@@ -33,10 +33,13 @@ jobs:
             url_shortener:
               - 'url_shortener/**'
   push-artifact:
+    name: Push artifacts
     needs: super-lint
     if: ${{ needs.super-lint.outputs.url_shortener == 'true' }}
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
       - name: Install Golang
         uses: actions/setup-go@v2
         with:

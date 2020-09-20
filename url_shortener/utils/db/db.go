@@ -18,7 +18,7 @@ func CreateDB(bucketName string) *bolt.DB {
 	return db
 }
 
-// WriteRecord saves record in in the bucket 'bucketname'
+// WriteRecord saves record in the bucket 'bucketname'
 func WriteRecord(db *bolt.DB, bucketName string, hashValue string, url string) {
 
 	if err := db.Update(func(tx *bolt.Tx) error {
