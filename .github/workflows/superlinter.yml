@@ -1,7 +1,5 @@
 name: Super-Linter
 
-# Run this workflow ever time code is pushed to a branch
-# other than `main` in your repository
 on:
   push:
     branches-ignore:

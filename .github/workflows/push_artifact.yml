@@ -9,7 +9,7 @@ on:
       - master
 
 jobs:
-  build-app:
+  super-lint:
     name: Build app and push to artifactory
     runs-on: ubuntu-latest
     steps:
@@ -20,7 +20,22 @@ jobs:
         env:
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - uses: actions/setup-go@v2
+      - name: Check for changes
+        uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            math_quiz:
+              - 'math_quiz/**'
+            url_shortener:
+              - 'url_shortener/**'
+  push-artifact:
+    needs: super-lint
+    if: ${{ needs.super-lint.outputs.url_shortener == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Golang
+        uses: actions/setup-go@v2
         with:
           go-version: '1.14.7' # The Go version to download (if necessary) and use.
       - name: Build Golang app
