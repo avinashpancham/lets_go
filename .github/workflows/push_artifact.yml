@@ -1,4 +1,4 @@
-name: Push-Artifact
+name: Lint-And-Push-Artifact
 
 on:
   push:
@@ -50,6 +50,7 @@ jobs:
           go build .
       - name: Set up JFrog
         uses: jfrog/setup-jfrog-cli@v1
+        # See for instructions to make secret https://circleci.com/docs/2.0/artifactory/
         env:
           JF_ARTIFACTORY_1: ${{ secrets.JF_ARTIFACTORY_SECRET_1 }}
       - name: Get current time
