@@ -39,7 +39,7 @@ func ShortenHandler(db *bolt.DB, bucketName string) http.HandlerFunc {
 		}
 		err := tmpl.Execute(w, data)
 		if err != nil {
-			fmt.Println("Error in shorten template")
+			fmt.Println("Error in shortenHandler template")
 		}
 	}
 
