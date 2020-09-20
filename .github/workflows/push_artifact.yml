@@ -10,8 +10,11 @@ on:
 
 jobs:
   super-lint:
-    name: Build app and push to artifactory
+    name: Lint code base
     runs-on: ubuntu-latest
+    outputs:
+      math_quiz: ${{ steps.filter.outputs.math_quiz }}
+      url_shortener: ${{ steps.filter.outputs.url_shortener }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
