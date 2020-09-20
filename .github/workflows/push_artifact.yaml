@@ -31,9 +31,14 @@ jobs:
         uses: jfrog/setup-jfrog-cli@v1
         env:
           JF_ARTIFACTORY_1: ${{ secrets.JF_ARTIFACTORY_SECRET_1 }}
+      - name: Get current time
+        uses: 1466587594/get-current-time@v2
+        id: current-time
+        with:
+          format: YYYYMMDD
       - name: Push to artifactory
         env:
-          DATE: $(date '+%Y%m%d')
+          DATE: "${{ steps.current-time.outputs.formattedTime }}"
         run: |
           cd url_shortener
           jfrog rt u "url_shortener" go --build-name=$DATE_url_shortener --build-number=$GITHUB_RUN_NUMBER --flat=false
