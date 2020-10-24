@@ -7,6 +7,10 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
+
+	"github.com/buger/goterm"
+	tm "github.com/buger/goterm"
 )
 
 type itemUpdate struct {
@@ -53,6 +57,24 @@ func sum(s []float32) int {
 	return int(sum)
 }
 
+func printProgressBar(arr []float32) {
+
+	for i, percentage := range arr {
+
+		tm.Printf("item %d: %s %5.2f\n", i, pgb(percentage), percentage)
+	}
+	tm.Flush()
+
+}
+
+func pgb(percentage float32) string {
+	var elementWidth float32 = 2.5
+	numEqual := int(percentage / elementWidth)
+
+	pg := strings.Repeat("=", numEqual) + ">" + strings.Repeat(" ", int(100/elementWidth))
+	return pg[:int(100/elementWidth)]
+}
+
 func main() {
 	url := "http://ipv4.download.thinkbroadband.com/5MB.zip"
 	n := 2
@@ -68,10 +90,16 @@ func main() {
 		select {
 		case res := <-c:
 			tracker[res.item] = res.percentage
-			fmt.Printf("\ritem 0: %5.2f, item 1: %5.2f", tracker[0], tracker[1])
+			printProgressBar(tracker)
+
 			if sum(tracker) == n*100 {
 				done = false
+			} else {
+				goterm.MoveCursorUp(n)
+				tm.Flush()
+
 			}
+
 		}
 	}
 }
