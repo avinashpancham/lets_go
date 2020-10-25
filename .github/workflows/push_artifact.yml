@@ -35,7 +35,7 @@ jobs:
   push-artifact:
     name: Push artifacts
     needs: super-lint
-    if: ${{ needs.super-lint.outputs.url_shortener == 'true' }}
+    if: ${{ needs.super-lint.outputs.url_shortener == 'true' }} || ${{ needs.super-lint.outputs.parallell_downloader == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
