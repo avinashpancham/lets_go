@@ -4,18 +4,19 @@ import (
 
 	tm "github.com/buger/goterm"
 
+	cli "lets_go/parallell_downloader/utils/cli"
 	download "lets_go/parallell_downloader/utils/download"
 	progressbar "lets_go/parallell_downloader/utils/progressbar"
 )
 
 func main() {
-	url := "http://ipv4.download.thinkbroadband.com/5MB.zip"
-	n := 3
+	urls := cli.GetURLs()
 	c := make(chan download.Statistics)
+	n := len(urls)
 	overview := make([]float32, n)
 	fileNames := make([]string, n)
 
-	for i := 0; i < n; i++ {
+	for i, url := range urls {
 		go download.Downloader(url, i, c, fileNames)
 	}
 	
