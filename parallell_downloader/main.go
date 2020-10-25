@@ -26,7 +26,6 @@ func main() {
 		overview[update.Item] = update.Percentage
 		progressbar.PrintStatus(overview, fileNames)
 
-
 		if progressbar.DownloadCompleted(overview) {
 			// Stop listening once download is complete
 			break
