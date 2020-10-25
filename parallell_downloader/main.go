@@ -21,13 +21,11 @@ func main() {
 	}
 	
 	for {
-		select {
-		case update := <-c:
-			// Update progressbar with newly received statistics
-			overview[update.Item] = update.Percentage
-			progressbar.PrintStatus(overview, fileNames)
+		update := <-c
+		// Update progressbar with newly received statistics
+		overview[update.Item] = update.Percentage
+		progressbar.PrintStatus(overview, fileNames)
 
-		}
 
 		if progressbar.DownloadCompleted(overview) {
 			// Stop listening once download is complete
