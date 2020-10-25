@@ -31,9 +31,7 @@ func (tr *tracker) Write(p []byte) (int, error) {
 	percentage := 100 * float32(tr.progress) / float32(tr.size)
 
 	// Forward all data to a central location
-	select {
-	case tr.channel <- Statistics{Item: tr.item, FileName: tr.fileName, Percentage: percentage}:
-	}
+	tr.channel <- Statistics{Item: tr.item, FileName: tr.fileName, Percentage: percentage}
 
 	return n, nil
 }
@@ -75,7 +73,11 @@ func getFileName(responseHeader http.Header, url string) string {
 
 // Downloader downloads the content from url
 func Downloader(url string, item int, c chan Statistics, fileNames []string) {
-	resp, _ := http.Get(url)
+	resp, err := http.Get(url)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	defer resp.Body.Close()
 
 	// Get file info
@@ -87,5 +89,9 @@ func Downloader(url string, item int, c chan Statistics, fileNames []string) {
 	defer f.Close()
 
 	tr := &tracker{size: size, item: item, fileName: fileName, channel: c}
-	io.Copy(f, io.TeeReader(resp.Body, tr))
+	
+	if _, err := io.Copy(f, io.TeeReader(resp.Body, tr)); err != nil {
+		log.Fatal(err)
+	}
+	
 }
