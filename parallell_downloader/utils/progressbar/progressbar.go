@@ -22,7 +22,6 @@ func printProgressBar(arr float32) string {
 	return progressBarString[:int(100/elementWidth)]
 }
 
-
 // DownloadCompleted checks whether the download is completed
 func DownloadCompleted(arr []float32) bool {
 	var sum float32
