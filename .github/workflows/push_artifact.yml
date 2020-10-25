@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       math_quiz: ${{ steps.filter.outputs.math_quiz }}
+      parallell_downloader: ${{ steps.filter.outputs.parallell_downloader }}
       url_shortener: ${{ steps.filter.outputs.url_shortener }}
     steps:
       - name: Checkout code
@@ -27,6 +28,8 @@ jobs:
           filters: |
             math_quiz:
               - 'math_quiz/**'
+            parallell_downloader:
+              - 'parallell_downloader/**'
             url_shortener:
               - 'url_shortener/**'
   push-artifact:
@@ -41,10 +44,6 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: '1.14.7' # The Go version to download (if necessary) and use.
-      - name: Build Golang app
-        run: |
-          cd url_shortener
-          go build .
       - name: Set up JFrog
         uses: jfrog/setup-jfrog-cli@v1
         # See for instructions to make secret https://circleci.com/docs/2.0/artifactory/
@@ -55,9 +54,27 @@ jobs:
         id: current-time
         with:
           format: YYYYMMDD
-      - name: Push to artifactory
+      - name: Build url_shortener app
+        if: ${{ needs.super-lint.outputs.url_shortener == 'true' }}
+        run: |
+          cd url_shortener
+          go build .
+      - name: Push url_shortener to artifactory
+        if: ${{ needs.super-lint.outputs.url_shortener == 'true' }}
         env:
           DATE: "${{ steps.current-time.outputs.formattedTime }}"
         run: |
           cd url_shortener
           jfrog rt u "url_shortener" go --build-name="${DATE}_url_shortener" --build-number=$GITHUB_RUN_NUMBER --flat=false
+      - name: Build parallell_downloader app
+        if: ${{ needs.super-lint.outputs.parallell_downloader == 'true' }}
+        run: |
+          cd parallell_downloader
+          go build .
+      - name: Push parallell_downloader to artifactory
+        if: ${{ needs.super-lint.outputs.parallell_downloader == 'true' }}
+        env:
+          DATE: "${{ steps.current-time.outputs.formattedTime }}"
+        run: |
+          cd parallell_downloader
+          jfrog rt u "parallell_downloader" go --build-name="${DATE}parallell_downloader" --build-number=$GITHUB_RUN_NUMBER --flat=false
