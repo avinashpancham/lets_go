@@ -10,12 +10,13 @@ import (
 
 func main() {
 	url := "http://ipv4.download.thinkbroadband.com/5MB.zip"
-	n := 2
+	n := 3
 	c := make(chan download.Statistics)
 	overview := make([]float32, n)
+	fileNames := make([]string, n)
 
 	for i := 0; i < n; i++ {
-		go download.Downloader(url, i, c)
+		go download.Downloader(url, i, c, fileNames)
 	}
 	
 	for {
@@ -23,7 +24,7 @@ func main() {
 		case update := <-c:
 			// Update progressbar with newly received statistics
 			overview[update.Item] = update.Percentage
-			progressbar.PrintStatus(overview)
+			progressbar.PrintStatus(overview, fileNames)
 
 		}
 

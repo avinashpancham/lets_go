@@ -12,11 +12,13 @@ import (
 // Statistics is a container for download progress statistics
 type Statistics struct {
 	Item       int
+	FileName	string
 	Percentage float32
 }
 
 type tracker struct {
 	channel  chan Statistics
+	fileName string
 	item     int
 	progress int
 	size    int
@@ -30,7 +32,7 @@ func (tr *tracker) Write(p []byte) (int, error) {
 
 	// Forward all data to a central location
 	select {
-	case tr.channel <- Statistics{Item: tr.item, Percentage: percentage}:
+	case tr.channel <- Statistics{Item: tr.item, FileName: tr.fileName, Percentage: percentage}:
 	}
 
 	return n, nil
@@ -72,18 +74,18 @@ func getFileName(responseHeader http.Header, url string) string {
 
 
 // Downloader downloads the content from url
-func Downloader(url string, item int, c chan Statistics) {
+func Downloader(url string, item int, c chan Statistics, fileNames []string) {
 	resp, _ := http.Get(url)
 	defer resp.Body.Close()
 
 	// Get file info
 	size := int(resp.ContentLength)
 	fileName := getFileName(resp.Header, url)
+	fileNames[item] = fileName
 
-	// name := fmt.Sprintf("%s%d.%s", fileName,rand.Intn(10000), fileExtension)
 	f, _ := os.Create(fileName)
 	defer f.Close()
 
-	tr := &tracker{size: size, item: item, channel: c}
+	tr := &tracker{size: size, item: item, fileName: fileName, channel: c}
 	io.Copy(f, io.TeeReader(resp.Body, tr))
 }

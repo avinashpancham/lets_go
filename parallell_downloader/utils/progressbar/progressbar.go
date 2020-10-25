@@ -6,10 +6,10 @@ import (
 )
 
 // PrintStatus prints the status of all downloads to the terminals
-func PrintStatus(arr []float32) {
+func PrintStatus(arr []float32, names []string) {
 
 	for index, percentage := range arr {
-		tm.Printf("item %d: %s %5.2f\n", index, printProgressBar(percentage), percentage)
+		tm.Printf("%s \t[%s] %5.2f%%\n",names[index] , printProgressBar(percentage), percentage)
 	}
 	tm.Flush()
 
