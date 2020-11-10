@@ -32,6 +32,7 @@ jobs:
               - 'parallell_downloader/**'
             url_shortener:
               - 'url_shortener/**'
+
   push-artifact:
     name: Push artifacts
     needs: super-lint
@@ -54,27 +55,19 @@ jobs:
         id: current-time
         with:
           format: YYYYMMDD
-      - name: Build url_shortener app
-        if: ${{ needs.super-lint.outputs.url_shortener == 'true' }}
-        run: |
-          cd url_shortener
-          go build .
-      - name: Push url_shortener to artifactory
+      - name: Build url_shortener app and push to artifactory
         if: ${{ needs.super-lint.outputs.url_shortener == 'true' }}
         env:
           DATE: "${{ steps.current-time.outputs.formattedTime }}"
         run: |
           cd url_shortener
-          jfrog rt u "url_shortener" go --build-name="${DATE}_url_shortener" --build-number=$GITHUB_RUN_NUMBER --flat=false
-      - name: Build parallell_downloader app
-        if: ${{ needs.super-lint.outputs.parallell_downloader == 'true' }}
-        run: |
-          cd parallell_downloader
           go build .
-      - name: Push parallell_downloader to artifactory
+          jfrog rt u "url_shortener" lets_go --build-name="${DATE}_url_shortener" --build-number=$GITHUB_RUN_NUMBER --flat=false
+      - name: Build parallell_downloader app and push to artifactory
         if: ${{ needs.super-lint.outputs.parallell_downloader == 'true' }}
         env:
           DATE: "${{ steps.current-time.outputs.formattedTime }}"
         run: |
           cd parallell_downloader
-          jfrog rt u "parallell_downloader" go --build-name="${DATE}parallell_downloader" --build-number=$GITHUB_RUN_NUMBER --flat=false
+          go build .
+          jfrog rt u "parallell_downloader" lets_go --build-name="${DATE}parallell_downloader" --build-number=$GITHUB_RUN_NUMBER --flat=false
