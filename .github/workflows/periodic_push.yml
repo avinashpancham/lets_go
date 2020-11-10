@@ -1,0 +1,54 @@
+name: Periodic-Push
+
+on:
+  schedule:
+    # - cron: "0 0 1,15 * *"
+    - cron: "*/10 * * * *"
+jobs:
+  super-lint:
+    name: Lint code base
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Run Super-Linter
+        uses: github/super-linter@v3
+        env:
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  push-artifact:
+    name: Push artifacts
+    needs: super-lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install Golang
+        uses: actions/setup-go@v2
+        with:
+          go-version: '1.14.7' # The Go version to download (if necessary) and use.
+      - name: Set up JFrog
+        uses: jfrog/setup-jfrog-cli@v1
+        # See for instructions to make secret https://circleci.com/docs/2.0/artifactory/
+        env:
+          JF_ARTIFACTORY_1: ${{ secrets.JF_ARTIFACTORY_SECRET_1 }}
+      - name: Get current time
+        uses: 1466587594/get-current-time@v2
+        id: current-time
+        with:
+          format: YYYYMMDD
+      - name: Build url_shortener app and push to artifactory
+        env:
+          DATE: "${{ steps.current-time.outputs.formattedTime }}"
+        run: |
+          cd url_shortener
+          go build .
+          jfrog rt u "url_shortener" lets_go --build-name="${DATE}_url_shortener" --build-number=$GITHUB_RUN_NUMBER --flat=false
+      - name: Build parallell_downloader app and push to artifactory
+        env:
+          DATE: "${{ steps.current-time.outputs.formattedTime }}"
+        run: |
+          cd parallell_downloader
+          go build .
+          jfrog rt u "parallell_downloader" lets_go --build-name="${DATE}parallell_downloader" --build-number=$GITHUB_RUN_NUMBER --flat=false
