@@ -21,7 +21,7 @@ func main() {
 	s := "/static/"
 	r.PathPrefix(s).Handler(http.StripPrefix(s, http.FileServer(http.Dir("."+s))))
 
-	// Define endpoints
+	// Define app endpoints
 	r.HandleFunc("/shortener/{page}", view_utils.ShortenHandler(db, bucketName))
 	r.HandleFunc("/{hash:[a-z0-9]{5}}", view_utils.RedirectHandler(db, bucketName))
 	r.HandleFunc("/", view_utils.MainHandler)

@@ -13,6 +13,7 @@ func main() {
 	urls := cli.GetURLs()
 	c := make(chan download.Statistics)
 	n := len(urls)
+	// TODO: make one struct
 	overview := make([]float32, n)
 	fileNames := make([]string, n)
 
