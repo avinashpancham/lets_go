@@ -2,8 +2,8 @@ name: Periodic-Push
 
 on:
   schedule:
-    # - cron: "0 0 1,15 * *"
-    - cron: "*/10 * * * *"
+    - cron: "0 0 1,15 * *"
+    
 jobs:
   super-lint:
     name: Lint code base
